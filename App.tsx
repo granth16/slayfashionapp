@@ -1,8 +1,9 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {initNotifications} from './src/services/notificationService';
 import {HomeScreen} from './src/screens/HomeScreen';
 import {CategoryScreen} from './src/screens/CategoryScreen';
 import {ProductDetailScreen} from './src/screens/ProductDetailScreen';
@@ -249,6 +250,11 @@ function TabNavigator() {
 }
 
 function App() {
+  // Initialize OneSignal notifications
+  useEffect(() => {
+    initNotifications();
+  }, []);
+
   return (
     <CartProvider>
       <NavigationContainer>
