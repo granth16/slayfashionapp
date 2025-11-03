@@ -1,8 +1,15 @@
 import React from 'react';
 import {View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity} from 'react-native';
 import {Header} from '../components/Header';
+import {useNavigation} from '@react-navigation/native';
 
 export const MyProfileScreen = () => {
+  const navigation = useNavigation();
+
+  const handleLogin = () => {
+    navigation.navigate('Login' as never);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <Header />
@@ -28,8 +35,8 @@ export const MyProfileScreen = () => {
           </View>
         </View>
 
-        <TouchableOpacity style={styles.loginButton}>
-          <Text style={styles.loginButtonText}>LOGIN / SIGN UP</Text>
+        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+          <Text style={styles.loginButtonText}>⚡ LOGIN WITH KWIKPASS</Text>
         </TouchableOpacity>
 
         <View style={styles.section}>

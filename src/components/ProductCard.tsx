@@ -22,11 +22,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({product}) => {
     <TouchableOpacity style={styles.card} onPress={handlePress}>
       <Image source={{uri: product.image}} style={styles.image} />
       <View style={styles.info}>
-        <Text style={styles.name} numberOfLines={2}>
+        <Text style={styles.name} numberOfLines={1}>
           {product.name}
         </Text>
-        <Text style={styles.description} numberOfLines={2}>
-          {product.description}
+        <Text style={styles.subtitle} numberOfLines={1}>
+          {product.description || '100% COTTON SHIRT'}
         </Text>
         <Text style={styles.price}>Rs. {product.price.toFixed(2)}</Text>
       </View>
@@ -38,39 +38,37 @@ const styles = StyleSheet.create({
   card: {
     flex: 1,
     margin: 8,
-    backgroundColor: '#fff',
-    borderRadius: 12,
+    backgroundColor: 'transparent',
     overflow: 'hidden',
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    minWidth: 160,
-    maxWidth: 200,
+    width: 160,
   },
   image: {
-    width: '100%',
-    height: 200,
-    backgroundColor: '#f0f0f0',
+    width: 160,
+    height: 240,
+    backgroundColor: '#f5f5f5',
+    borderRadius: 0,
   },
   info: {
-    padding: 12,
+    paddingTop: 12,
+    paddingHorizontal: 4,
   },
   name: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#000',
     marginBottom: 4,
+    textTransform: 'uppercase',
+    letterSpacing: 0.3,
   },
-  description: {
-    fontSize: 13,
-    color: '#666',
+  subtitle: {
+    fontSize: 11,
+    color: '#999',
     marginBottom: 8,
+    letterSpacing: 0.2,
   },
   price: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 16,
+    fontWeight: '500',
     color: '#000',
   },
 });

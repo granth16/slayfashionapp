@@ -130,8 +130,14 @@ export const ProductDetailScreen: React.FC<Props> = ({route, navigation}) => {
   // Sample sizes - in a real app, these would come from product variants
   const sizes = ['M-40', 'L-42', 'XL-44'];
 
-  // Multiple images (in real app, get from product data)
-  const images = [product.image, product.image, product.image];
+  // Use actual product images from Shopify
+  const images = product.images && product.images.length > 0 ? product.images : [product.image];
+
+  // Debug: Log images
+  useEffect(() => {
+    console.log('Product images:', product.images);
+    console.log('Images array for slideshow:', images);
+  }, [product]);
 
   // Load related products from Shopify
   useEffect(() => {

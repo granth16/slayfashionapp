@@ -23,7 +23,7 @@ const PRODUCTS_QUERY = `
               currencyCode
             }
           }
-          images(first: 1) {
+          images(first: 10) {
             edges {
               node {
                 url
@@ -52,7 +52,7 @@ const PRODUCTS_BY_TYPE_QUERY = `
               currencyCode
             }
           }
-          images(first: 1) {
+          images(first: 10) {
             edges {
               node {
                 url
@@ -74,6 +74,7 @@ export interface ShopifyProduct {
   price: number;
   category: string;
   image: string;
+  images: string[];
 }
 
 export const fetchAllProducts = async (): Promise<ShopifyProduct[]> => {
@@ -83,14 +84,18 @@ export const fetchAllProducts = async (): Promise<ShopifyProduct[]> => {
       variables: {first: 50},
     });
 
-    const products = response.data.data.products.edges.map((edge: any) => ({
-      id: edge.node.id,
-      name: edge.node.title,
-      description: edge.node.description?.substring(0, 50) || 'Premium quality',
-      price: parseFloat(edge.node.priceRange.minVariantPrice.amount),
-      category: edge.node.productType || 'Others',
-      image: edge.node.images.edges[0]?.node.url || 'https://via.placeholder.com/400x500',
-    }));
+    const products = response.data.data.products.edges.map((edge: any) => {
+      const allImages = edge.node.images.edges.map((img: any) => img.node.url);
+      return {
+        id: edge.node.id,
+        name: edge.node.title,
+        description: edge.node.description?.substring(0, 50) || 'Premium quality',
+        price: parseFloat(edge.node.priceRange.minVariantPrice.amount),
+        category: edge.node.productType || 'Others',
+        image: allImages[0] || 'https://via.placeholder.com/400x500',
+        images: allImages.length > 0 ? allImages : ['https://via.placeholder.com/400x500'],
+      };
+    });
 
     return products;
   } catch (error) {
@@ -111,14 +116,18 @@ export const fetchProductsByCategory = async (
       },
     });
 
-    const products = response.data.data.products.edges.map((edge: any) => ({
-      id: edge.node.id,
-      name: edge.node.title,
-      description: edge.node.description?.substring(0, 50) || 'Premium quality',
-      price: parseFloat(edge.node.priceRange.minVariantPrice.amount),
-      category: edge.node.productType || 'Others',
-      image: edge.node.images.edges[0]?.node.url || 'https://via.placeholder.com/400x500',
-    }));
+    const products = response.data.data.products.edges.map((edge: any) => {
+      const allImages = edge.node.images.edges.map((img: any) => img.node.url);
+      return {
+        id: edge.node.id,
+        name: edge.node.title,
+        description: edge.node.description?.substring(0, 50) || 'Premium quality',
+        price: parseFloat(edge.node.priceRange.minVariantPrice.amount),
+        category: edge.node.productType || 'Others',
+        image: allImages[0] || 'https://via.placeholder.com/400x500',
+        images: allImages.length > 0 ? allImages : ['https://via.placeholder.com/400x500'],
+      };
+    });
 
     return products;
   } catch (error) {

@@ -11,6 +11,8 @@ import {MyOrdersScreen} from './src/screens/MyOrdersScreen';
 import {ContactUsScreen} from './src/screens/ContactUsScreen';
 import {ReturnsScreen} from './src/screens/ReturnsScreen';
 import {MyProfileScreen} from './src/screens/MyProfileScreen';
+import {CheckoutScreen} from './src/screens/CheckoutScreen';
+import {LoginScreen} from './src/screens/LoginScreen';
 import {CartProvider, useCart} from './src/context/CartContext';
 import {ShopifyProduct} from './src/services/shopifyService';
 import {HomeIcon, CartIcon} from './src/components/CustomIcons';
@@ -24,6 +26,8 @@ const Tab = createBottomTabNavigator();
 export type RootStackParamList = {
   Main: {category?: string} | undefined;
   ProductDetail: {product: ShopifyProduct};
+  Checkout: undefined;
+  Login: undefined;
 };
 
 // Stack Navigator for Home with Product Detail
@@ -71,12 +75,42 @@ function CategoryStack({route}: any) {
         name="Main"
         component={CategoryScreen}
         initialParams={{category}}
-        options={{title: category}}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="ProductDetail"
         component={ProductDetailScreen}
         options={{headerShown: false}}
+      />
+    </Stack.Navigator>
+  );
+}
+
+// Stack Navigator for Cart with Checkout
+function CartStack() {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: '#000',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }}>
+      <Stack.Screen
+        name="Main"
+        component={CartScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Checkout"
+        component={CheckoutScreen}
+        options={{
+          title: 'Checkout',
+          headerShown: true,
+        }}
       />
     </Stack.Navigator>
   );
@@ -154,6 +188,13 @@ function DrawerNavigator() {
         component={MyProfileScreen}
         options={{title: 'My Profile'}}
       />
+      <Drawer.Screen
+        name="Login"
+        component={LoginScreen}
+        options={{
+          drawerItemStyle: {display: 'none'}, // Hide from drawer menu
+        }}
+      />
     </Drawer.Navigator>
   );
 }
@@ -190,7 +231,7 @@ function TabNavigator() {
       />
       <Tab.Screen
         name="CartTab"
-        component={CartScreen}
+        component={CartStack}
         options={{
           tabBarLabel: 'Cart',
           tabBarIcon: ({color, size}) => (

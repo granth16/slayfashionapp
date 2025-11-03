@@ -26,12 +26,14 @@ export const CategoryScreen = ({route}: any) => {
     setLoading(false);
   };
 
+  const displayCategory = category === 'All' ? 'products' : category;
+
   if (loading) {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#000" />
-          <Text style={styles.loadingText}>Loading {category}...</Text>
+          <Text style={styles.loadingText}>Loading {displayCategory}...</Text>
         </View>
       </SafeAreaView>
     );

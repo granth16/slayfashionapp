@@ -53,12 +53,13 @@ export const Header: React.FC<HeaderProps> = ({showMenu = true}) => {
 
 const styles = StyleSheet.create({
   header: {
-    height: 60,
+    height: 70,
     backgroundColor: '#fff',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
+    paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: '#f0f0f0',
     elevation: 2,
@@ -78,7 +79,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: 120,
-    height: 40,
+    height: 45,
   },
   rightSpace: {
     width: 40,

@@ -31,19 +31,19 @@ export const HomeScreen = () => {
   // Organize products into sections
   const sections = [
     {
-      title: 'Featured Collection',
+      title: 'FEATURED COLLECTION',
       data: allProducts.slice(0, 4),
     },
     {
-      title: 'New Arrivals',
+      title: 'NEW ARRIVALS',
       data: allProducts.slice(4, 8),
     },
     {
-      title: 'Popular',
+      title: 'POPULAR',
       data: allProducts.slice(8, 12),
     },
     {
-      title: 'Trending Now',
+      title: 'TRENDING NOW',
       data: allProducts.slice(12),
     },
   ].filter(section => section.data.length > 0);
@@ -120,19 +120,18 @@ const styles = StyleSheet.create({
     paddingTop: 24,
     paddingBottom: 16,
     backgroundColor: '#f5f5f5',
+    borderBottomWidth: 2,
+    borderBottomColor: '#000',
   },
   sectionTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
+    fontSize: 18,
+    fontWeight: '700',
     color: '#000',
-    marginBottom: 8,
-    letterSpacing: 0.5,
+    letterSpacing: 1.2,
   },
   sectionLine: {
-    height: 3,
-    width: '100%',
-    maxWidth: 200,
-    backgroundColor: '#000',
+    height: 0,
+    width: 0,
   },
   productsGrid: {
     flexDirection: 'row',
