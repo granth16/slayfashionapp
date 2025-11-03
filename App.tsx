@@ -9,7 +9,7 @@ import {ProductDetailScreen} from './src/screens/ProductDetailScreen';
 import {CartScreen} from './src/screens/CartScreen';
 import {CartProvider, useCart} from './src/context/CartContext';
 import {ShopifyProduct} from './src/services/shopifyService';
-import Icon from 'react-native-vector-icons/Ionicons';
+import {HomeIcon, CartIcon} from './src/components/CustomIcons';
 import {View, Text, StyleSheet} from 'react-native';
 
 const Drawer = createDrawerNavigator();
@@ -173,7 +173,7 @@ function TabNavigator() {
         options={{
           tabBarLabel: 'Home',
           tabBarIcon: ({color, size}) => (
-            <Icon name="home" size={size} color={color} />
+            <HomeIcon size={size} color={color} />
           ),
         }}
       />
@@ -184,7 +184,7 @@ function TabNavigator() {
           tabBarLabel: 'Cart',
           tabBarIcon: ({color, size}) => (
             <View>
-              <Icon name="bag" size={size} color={color} />
+              <CartIcon size={size} color={color} />
               <CartBadge />
             </View>
           ),

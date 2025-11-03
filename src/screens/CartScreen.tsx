@@ -26,7 +26,7 @@ export const CartScreen = () => {
   if (cartItems.length === 0) {
     return (
       <SafeAreaView style={styles.container}>
-        <Header />
+        <Header showMenu={false} />
         <View style={styles.emptyContainer}>
           <Text style={styles.emptyIcon}>🛒</Text>
           <Text style={styles.emptyText}>Your cart is empty</Text>
@@ -79,7 +79,7 @@ export const CartScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header />
+      <Header showMenu={false} />
       <FlatList
         data={cartItems}
         renderItem={renderCartItem}

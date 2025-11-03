@@ -177,6 +177,15 @@ export const ProductDetailScreen: React.FC<Props> = ({route, navigation}) => {
         icon="👕"
       />
 
+      {/* Header with Back Button */}
+      <View style={styles.header}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}>
+          <Text style={styles.backButtonText}>‹</Text>
+        </TouchableOpacity>
+      </View>
+
       <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
         {/* Image Gallery */}
         <View style={styles.imageGalleryContainer}>
@@ -193,12 +202,6 @@ export const ProductDetailScreen: React.FC<Props> = ({route, navigation}) => {
               setCurrentImageIndex(index);
             }}
           />
-          {/* Floating Back Button */}
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => navigation.goBack()}>
-            <Text style={styles.backButtonText}>←</Text>
-          </TouchableOpacity>
           {/* Page Indicators */}
           <View style={styles.paginationDots}>
             {images.map((_, index) => (
@@ -359,21 +362,22 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  scrollView: {
-    flex: 1,
-  },
-  // Image Gallery
-  imageGalleryContainer: {
-    width: width,
-    height: width * 1.3,
-    backgroundColor: '#f5f5f5',
-    position: 'relative',
-  },
-  // Floating Back Button
-  backButton: {
+  // Header with Back Button
+  header: {
     position: 'absolute',
-    top: 50,
-    left: 16,
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 56,
+   
+
+    flexDirection: 'row',
+    alignItems: 'center',
+    
+    paddingHorizontal: 8,
+    zIndex: 10,
+  },
+  backButton: {
     width: 40,
     height: 40,
     borderRadius: 20,
@@ -387,9 +391,23 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   backButtonText: {
-    fontSize: 24,
+    fontSize: 36,
     color: '#000',
-    fontWeight: '400',
+    fontWeight: '200',
+    lineHeight: 36,
+    textAlign: 'center',
+    includeFontPadding: false,
+    marginTop: -2,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  // Image Gallery
+  imageGalleryContainer: {
+    width: width,
+    height: width * 1.3,
+    backgroundColor: '#f5f5f5',
+    position: 'relative',
   },
   imageSlide: {
     width: width,
