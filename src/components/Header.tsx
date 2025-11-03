@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Image, StyleSheet, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
-import Icon from 'react-native-vector-icons/Ionicons';
+import Svg, {Path} from 'react-native-svg';
 
 type NavigationProp = DrawerNavigationProp<any>;
 
@@ -22,7 +22,15 @@ export const Header: React.FC<HeaderProps> = ({showMenu = true}) => {
       {/* Menu Icon - conditionally shown */}
       {showMenu ? (
         <TouchableOpacity style={styles.menuButton} onPress={openDrawer}>
-          <Icon name="menu-outline" size={28} color="#000" />
+          <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
+            <Path
+              d="M3 12h18M3 6h18M3 18h18"
+              stroke="#000"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </Svg>
         </TouchableOpacity>
       ) : (
         <View style={styles.leftSpace} />

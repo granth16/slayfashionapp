@@ -86,7 +86,7 @@ export const HomeScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header showMenu={false} />
+      <Header showMenu={true} />
       <FlatList
         data={[{key: 'content'}]}
         renderItem={() => renderContent()}

@@ -15,7 +15,13 @@ export const CategoryScreen = ({route}: any) => {
 
   const loadProducts = async () => {
     setLoading(true);
-    const data = await fetchProductsByCategory(category);
+    let data;
+    if (category === 'All') {
+      const {fetchAllProducts} = await import('../services/shopifyService');
+      data = await fetchAllProducts();
+    } else {
+      data = await fetchProductsByCategory(category);
+    }
     setProducts(data);
     setLoading(false);
   };

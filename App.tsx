@@ -7,9 +7,14 @@ import {HomeScreen} from './src/screens/HomeScreen';
 import {CategoryScreen} from './src/screens/CategoryScreen';
 import {ProductDetailScreen} from './src/screens/ProductDetailScreen';
 import {CartScreen} from './src/screens/CartScreen';
+import {MyOrdersScreen} from './src/screens/MyOrdersScreen';
+import {ContactUsScreen} from './src/screens/ContactUsScreen';
+import {ReturnsScreen} from './src/screens/ReturnsScreen';
+import {MyProfileScreen} from './src/screens/MyProfileScreen';
 import {CartProvider, useCart} from './src/context/CartContext';
 import {ShopifyProduct} from './src/services/shopifyService';
 import {HomeIcon, CartIcon} from './src/components/CustomIcons';
+import {CustomDrawerContent} from './src/components/CustomDrawerContent';
 import {View, Text, StyleSheet} from 'react-native';
 
 const Drawer = createDrawerNavigator();
@@ -91,17 +96,32 @@ function CartBadge() {
   );
 }
 
-// Drawer Navigator (Categories)
+// Drawer Navigator (Main Menu)
 function DrawerNavigator() {
   return (
     <Drawer.Navigator
+      drawerContent={props => <CustomDrawerContent {...props} />}
       screenOptions={{
         headerShown: false,
         drawerStyle: {
           backgroundColor: '#fff',
+          width: 280,
         },
         drawerActiveTintColor: '#000',
         drawerInactiveTintColor: '#666',
+        drawerActiveBackgroundColor: '#f5f5f5',
+        drawerItemStyle: {
+          marginHorizontal: 12,
+          marginVertical: 5,
+          borderRadius: 8,
+          paddingLeft: 16,
+          paddingVertical: 8,
+        },
+        drawerLabelStyle: {
+          fontSize: 15,
+          fontWeight: '500',
+          marginLeft: 0,
+        },
       }}>
       <Drawer.Screen
         name="Home"
@@ -109,39 +129,30 @@ function DrawerNavigator() {
         options={{title: 'Home'}}
       />
       <Drawer.Screen
-        name="Shirts"
+        name="Catalog"
         component={CategoryStack}
-        initialParams={{category: 'Shirts'}}
+        initialParams={{category: 'All'}}
+        options={{title: 'Catalog'}}
       />
       <Drawer.Screen
-        name="Prints"
-        component={CategoryStack}
-        initialParams={{category: 'Prints'}}
+        name="My Orders"
+        component={MyOrdersScreen}
+        options={{title: 'My Orders'}}
       />
       <Drawer.Screen
-        name="Textured"
-        component={CategoryStack}
-        initialParams={{category: 'Textured'}}
+        name="Contact Us"
+        component={ContactUsScreen}
+        options={{title: 'Contact Us'}}
       />
       <Drawer.Screen
-        name="Modern Checks"
-        component={CategoryStack}
-        initialParams={{category: 'Modern Checks'}}
+        name="Returns"
+        component={ReturnsScreen}
+        options={{title: 'Return'}}
       />
       <Drawer.Screen
-        name="Trendy Stripes"
-        component={CategoryStack}
-        initialParams={{category: 'Trendy Stripes'}}
-      />
-      <Drawer.Screen
-        name="Trends"
-        component={CategoryStack}
-        initialParams={{category: 'Trends'}}
-      />
-      <Drawer.Screen
-        name="Others"
-        component={CategoryStack}
-        initialParams={{category: 'Others'}}
+        name="My Profile"
+        component={MyProfileScreen}
+        options={{title: 'My Profile'}}
       />
     </Drawer.Navigator>
   );
