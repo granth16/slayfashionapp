@@ -52,6 +52,7 @@ function HomeStack() {
         name="ProductDetail"
         component={ProductDetailScreen}
         options={{headerShown: false}}
+        getId={({params}) => params?.product?.id}
       />
     </Stack.Navigator>
   );
@@ -81,6 +82,7 @@ function CategoryStack({route}: any) {
         name="ProductDetail"
         component={ProductDetailScreen}
         options={{headerShown: false}}
+        getId={({params}) => params?.product?.id}
       />
     </Stack.Navigator>
   );

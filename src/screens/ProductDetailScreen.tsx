@@ -139,6 +139,14 @@ export const ProductDetailScreen: React.FC<Props> = ({route, navigation}) => {
     console.log('Images array for slideshow:', images);
   }, [product]);
 
+  // Reset states when product changes
+  useEffect(() => {
+    setSelectedSize('');
+    setCurrentImageIndex(0);
+    setShowSizeAlert(false);
+    setAddedToCart(false);
+  }, [product.id]);
+
   // Load related products from Shopify
   useEffect(() => {
     const loadRelatedProducts = async () => {
@@ -150,7 +158,7 @@ export const ProductDetailScreen: React.FC<Props> = ({route, navigation}) => {
       setRelatedProducts(related);
     };
     loadRelatedProducts();
-  }, [product]);
+  }, [product.id]);
 
   const handleAddToCart = () => {
     if (!selectedSize) {
