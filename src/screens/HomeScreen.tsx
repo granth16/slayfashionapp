@@ -1,10 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {View, FlatList, StyleSheet, SafeAreaView, ActivityIndicator, Text} from 'react-native';
 import {ProductCard} from '../components/ProductCard';
+import {ImageSlideshow} from '../components/ImageSlideshow';
+import {Header} from '../components/Header';
 import {fetchAllProducts, ShopifyProduct} from '../services/shopifyService';
 
 export const HomeScreen = () => {
-  const [products, setProducts] = useState<ShopifyProduct[]>([]);
+  const [allProducts, setAllProducts] = useState<ShopifyProduct[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -22,9 +24,29 @@ export const HomeScreen = () => {
     const data = await fetchAllProducts();
     console.log('📦 Products received:', data.length);
     
-    setProducts(data);
+    setAllProducts(data);
     setLoading(false);
   };
+
+  // Organize products into sections
+  const sections = [
+    {
+      title: 'Featured Collection',
+      data: allProducts.slice(0, 4),
+    },
+    {
+      title: 'New Arrivals',
+      data: allProducts.slice(4, 8),
+    },
+    {
+      title: 'Popular',
+      data: allProducts.slice(8, 12),
+    },
+    {
+      title: 'Trending Now',
+      data: allProducts.slice(12),
+    },
+  ].filter(section => section.data.length > 0);
 
   if (loading) {
     return (
@@ -37,14 +59,39 @@ export const HomeScreen = () => {
     );
   }
 
+  const renderSectionHeader = (title: string) => (
+    <View style={styles.sectionHeader}>
+      <Text style={styles.sectionTitle}>{title}</Text>
+      <View style={styles.sectionLine} />
+    </View>
+  );
+
+  const renderContent = () => (
+    <>
+      <ImageSlideshow />
+      {sections.map((section, sectionIndex) => (
+        <View key={sectionIndex}>
+          {renderSectionHeader(section.title)}
+          <View style={styles.productsGrid}>
+            {section.data.map((product, index) => (
+              <View key={product.id} style={styles.productWrapper}>
+                <ProductCard product={product} />
+              </View>
+            ))}
+          </View>
+        </View>
+      ))}
+    </>
+  );
+
   return (
     <SafeAreaView style={styles.container}>
+      <Header showMenu={false} />
       <FlatList
-        data={products}
-        renderItem={({item}) => <ProductCard product={item} />}
-        keyExtractor={item => item.id}
-        numColumns={2}
-        contentContainerStyle={styles.grid}
+        data={[{key: 'content'}]}
+        renderItem={() => renderContent()}
+        keyExtractor={item => item.key}
+        showsVerticalScrollIndicator={false}
       />
     </SafeAreaView>
   );
@@ -67,5 +114,32 @@ const styles = StyleSheet.create({
     marginTop: 12,
     fontSize: 16,
     color: '#666',
+  },
+  sectionHeader: {
+    paddingHorizontal: 16,
+    paddingTop: 24,
+    paddingBottom: 16,
+    backgroundColor: '#f5f5f5',
+  },
+  sectionTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#000',
+    marginBottom: 8,
+    letterSpacing: 0.5,
+  },
+  sectionLine: {
+    height: 3,
+    width: '100%',
+    maxWidth: 200,
+    backgroundColor: '#000',
+  },
+  productsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingHorizontal: 0,
+  },
+  productWrapper: {
+    width: '50%',
   },
 });

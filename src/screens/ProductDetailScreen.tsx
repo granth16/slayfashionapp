@@ -9,12 +9,14 @@ import {
   Dimensions,
   SafeAreaView,
   FlatList,
-  Alert,
+  Modal,
+  Animated,
 } from 'react-native';
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {ShopifyProduct, fetchAllProducts} from '../services/shopifyService';
 import {ProductCard} from '../components/ProductCard';
+import {useCart} from '../context/CartContext';
 
 type RootStackParamList = {
   Main: undefined;
@@ -63,6 +65,57 @@ const Accordion: React.FC<AccordionProps> = ({
   );
 };
 
+// Custom Alert Component
+interface CustomAlertProps {
+  visible: boolean;
+  onClose: () => void;
+  title: string;
+  message: string;
+  icon?: string;
+}
+
+const CustomAlert: React.FC<CustomAlertProps> = ({
+  visible,
+  onClose,
+  title,
+  message,
+  icon = '⚠️',
+}) => {
+  const [scaleAnim] = useState(new Animated.Value(0));
+
+  useEffect(() => {
+    if (visible) {
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        tension: 50,
+        friction: 7,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      scaleAnim.setValue(0);
+    }
+  }, [visible]);
+
+  return (
+    <Modal transparent visible={visible} animationType="fade">
+      <View style={styles.modalOverlay}>
+        <Animated.View
+          style={[
+            styles.alertContainer,
+            {transform: [{scale: scaleAnim}]},
+          ]}>
+          <Text style={styles.alertIcon}>{icon}</Text>
+          <Text style={styles.alertTitle}>{title}</Text>
+          <Text style={styles.alertMessage}>{message}</Text>
+          <TouchableOpacity style={styles.alertButton} onPress={onClose}>
+            <Text style={styles.alertButtonText}>Got it!</Text>
+          </TouchableOpacity>
+        </Animated.View>
+      </View>
+    </Modal>
+  );
+};
+
 const {width} = Dimensions.get('window');
 
 export const ProductDetailScreen: React.FC<Props> = ({route, navigation}) => {
@@ -70,6 +123,9 @@ export const ProductDetailScreen: React.FC<Props> = ({route, navigation}) => {
   const [selectedSize, setSelectedSize] = useState<string>('');
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [relatedProducts, setRelatedProducts] = useState<ShopifyProduct[]>([]);
+  const [showSizeAlert, setShowSizeAlert] = useState(false);
+  const [addedToCart, setAddedToCart] = useState(false);
+  const {addToCart} = useCart();
 
   // Sample sizes - in a real app, these would come from product variants
   const sizes = ['M-40', 'L-42', 'XL-44'];
@@ -92,10 +148,16 @@ export const ProductDetailScreen: React.FC<Props> = ({route, navigation}) => {
 
   const handleAddToCart = () => {
     if (!selectedSize) {
-      Alert.alert('Select Size', 'Please select a size before adding to cart');
+      setShowSizeAlert(true);
       return;
     }
-    Alert.alert('Added to Cart!', `${product.name} (${selectedSize}) has been added to your cart`);
+    
+    // Add to cart
+    addToCart(product, selectedSize, 1);
+    
+    // Show success feedback
+    setAddedToCart(true);
+    setTimeout(() => setAddedToCart(false), 2000);
   };
 
   const renderImageItem = ({item, index}: {item: string; index: number}) => (
@@ -106,6 +168,15 @@ export const ProductDetailScreen: React.FC<Props> = ({route, navigation}) => {
 
   return (
     <View style={styles.container}>
+      {/* Custom Alert for Size Selection */}
+      <CustomAlert
+        visible={showSizeAlert}
+        onClose={() => setShowSizeAlert(false)}
+        title="Select a Size"
+        message="Please choose your size before adding this item to cart."
+        icon="👕"
+      />
+
       <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
         {/* Image Gallery */}
         <View style={styles.imageGalleryContainer}>
@@ -269,9 +340,14 @@ export const ProductDetailScreen: React.FC<Props> = ({route, navigation}) => {
       {/* Sticky Add to Cart Button */}
       <SafeAreaView style={styles.stickyFooter}>
         <TouchableOpacity
-          style={styles.addToCartButton}
+          style={[
+            styles.addToCartButton,
+            addedToCart && styles.addToCartButtonSuccess,
+          ]}
           onPress={handleAddToCart}>
-          <Text style={styles.addToCartButtonText}>ADD TO CART</Text>
+          <Text style={styles.addToCartButtonText}>
+            {addedToCart ? '✓ ADDED TO CART' : 'ADD TO CART'}
+          </Text>
         </TouchableOpacity>
       </SafeAreaView>
     </View>
@@ -422,6 +498,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 2,
   },
+  addToCartButtonSuccess: {
+    backgroundColor: '#34c759',
+  },
   addToCartButtonText: {
     color: '#fff',
     fontSize: 14,
@@ -506,6 +585,57 @@ const styles = StyleSheet.create({
   },
   relatedList: {
     paddingHorizontal: 8,
+  },
+  // Custom Alert Modal
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  alertContainer: {
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    padding: 30,
+    width: '85%',
+    maxWidth: 340,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 10},
+    shadowOpacity: 0.3,
+    shadowRadius: 20,
+    elevation: 10,
+  },
+  alertIcon: {
+    fontSize: 60,
+    marginBottom: 16,
+  },
+  alertTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#000',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  alertMessage: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
+    lineHeight: 24,
+    marginBottom: 24,
+  },
+  alertButton: {
+    backgroundColor: '#000',
+    paddingVertical: 14,
+    paddingHorizontal: 40,
+    borderRadius: 25,
+    width: '100%',
+  },
+  alertButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'center',
   },
 });
 

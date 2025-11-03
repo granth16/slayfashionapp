@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {View, FlatList, StyleSheet, SafeAreaView, ActivityIndicator, Text} from 'react-native';
 import {ProductCard} from '../components/ProductCard';
+import {Header} from '../components/Header';
 import {fetchProductsByCategory, ShopifyProduct} from '../services/shopifyService';
 
 export const CategoryScreen = ({route}: any) => {
@@ -32,6 +33,7 @@ export const CategoryScreen = ({route}: any) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Header />
       <FlatList
         data={products}
         renderItem={({item}) => <ProductCard product={item} />}
