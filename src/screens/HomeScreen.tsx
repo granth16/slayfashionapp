@@ -107,6 +107,7 @@ const styles = StyleSheet.create({
   },
   grid: {
     padding: 8,
+    
   },
   loadingContainer: {
     flex: 1,
@@ -140,8 +141,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     paddingHorizontal: 0,
+    marginTop: 10,
+    marginBottom: 10,
+   
   },
   productWrapper: {
-    width: '50%',
+    width: '50%', 
+ 
   },
 });

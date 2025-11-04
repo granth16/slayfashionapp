@@ -87,11 +87,11 @@ export const fetchAllProducts = async (): Promise<ShopifyProduct[]> => {
     const products = response.data.data.products.edges.map((edge: any) => {
       const allImages = edge.node.images.edges.map((img: any) => img.node.url);
       return {
-        id: edge.node.id,
-        name: edge.node.title,
-        description: edge.node.description?.substring(0, 50) || 'Premium quality',
-        price: parseFloat(edge.node.priceRange.minVariantPrice.amount),
-        category: edge.node.productType || 'Others',
+      id: edge.node.id,
+      name: edge.node.title,
+      description: edge.node.description?.substring(0, 50) || 'Premium quality',
+      price: parseFloat(edge.node.priceRange.minVariantPrice.amount),
+      category: edge.node.productType || 'Others',
         image: allImages[0] || 'https://via.placeholder.com/400x500',
         images: allImages.length > 0 ? allImages : ['https://via.placeholder.com/400x500'],
       };
@@ -119,11 +119,11 @@ export const fetchProductsByCategory = async (
     const products = response.data.data.products.edges.map((edge: any) => {
       const allImages = edge.node.images.edges.map((img: any) => img.node.url);
       return {
-        id: edge.node.id,
-        name: edge.node.title,
-        description: edge.node.description?.substring(0, 50) || 'Premium quality',
-        price: parseFloat(edge.node.priceRange.minVariantPrice.amount),
-        category: edge.node.productType || 'Others',
+      id: edge.node.id,
+      name: edge.node.title,
+      description: edge.node.description?.substring(0, 50) || 'Premium quality',
+      price: parseFloat(edge.node.priceRange.minVariantPrice.amount),
+      category: edge.node.productType || 'Others',
         image: allImages[0] || 'https://via.placeholder.com/400x500',
         images: allImages.length > 0 ? allImages : ['https://via.placeholder.com/400x500'],
       };

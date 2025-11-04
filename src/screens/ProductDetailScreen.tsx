@@ -345,7 +345,7 @@ export const ProductDetailScreen: React.FC<Props> = ({route, navigation}) => {
           <Text style={styles.relatedTitle}>You May Also Like</Text>
           <FlatList
             data={relatedProducts}
-            renderItem={({item}) => <ProductCard product={item} />}
+            renderItem={({item}) => <ProductCard product={item} variant="carousel" />}
             keyExtractor={item => item.id}
             horizontal
             showsHorizontalScrollIndicator={false}

@@ -16,7 +16,7 @@ import {CheckoutScreen} from './src/screens/CheckoutScreen';
 import {LoginScreen} from './src/screens/LoginScreen';
 import {CartProvider, useCart} from './src/context/CartContext';
 import {ShopifyProduct} from './src/services/shopifyService';
-import {HomeIcon, CartIcon} from './src/components/CustomIcons';
+import {HomeIcon, CartIcon, ProfileIcon} from './src/components/CustomIcons';
 import {CustomDrawerContent} from './src/components/CustomDrawerContent';
 import {View, Text, StyleSheet} from 'react-native';
 
@@ -242,6 +242,16 @@ function TabNavigator() {
               <CartIcon size={size} color={color} />
               <CartBadge />
             </View>
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="ProfileTab"
+        component={MyProfileScreen}
+        options={{
+          tabBarLabel: 'Profile',
+          tabBarIcon: ({color, size}) => (
+            <ProfileIcon size={size} color={color} />
           ),
         }}
       />
