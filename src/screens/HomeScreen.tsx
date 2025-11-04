@@ -3,6 +3,7 @@ import {View, FlatList, StyleSheet, SafeAreaView, ActivityIndicator, Text} from 
 import {ProductCard} from '../components/ProductCard';
 import {ImageSlideshow} from '../components/ImageSlideshow';
 import {Header} from '../components/Header';
+import ProductRatingWidget from '../components/ProductRatingWidget';
 import {fetchAllProducts, ShopifyProduct} from '../services/shopifyService';
 
 export const HomeScreen = () => {
@@ -79,6 +80,8 @@ export const HomeScreen = () => {
               </View>
             ))}
           </View>
+          {/* Show rating widget after New Arrivals section */}
+          {section.title === 'NEW ARRIVALS' && <ProductRatingWidget />}
         </View>
       ))}
     </>
