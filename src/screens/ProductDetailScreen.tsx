@@ -15,6 +15,8 @@ import {
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {ShopifyProduct, fetchAllProducts} from '../services/shopifyService';
+import {fetchProductReviews, computeRatingSummary} from '../services/judgemeService';
+import {StarRating} from '../components/StarRating';
 import {ProductCard} from '../components/ProductCard';
 import {useCart} from '../context/CartContext';
 
@@ -125,6 +127,11 @@ export const ProductDetailScreen: React.FC<Props> = ({route, navigation}) => {
   const [relatedProducts, setRelatedProducts] = useState<ShopifyProduct[]>([]);
   const [showSizeAlert, setShowSizeAlert] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
+  const [reviewsAvg, setReviewsAvg] = useState<number>(0);
+  const [reviewsCount, setReviewsCount] = useState<number>(0);
+  const [topReviews, setTopReviews] = useState<
+    {id: number; rating: number; title: string | null; body: string | null; reviewerName: string | null; createdAt: string}[]
+  >([]);
   const {addToCart} = useCart();
 
   // Sample sizes - in a real app, these would come from product variants
@@ -145,6 +152,31 @@ export const ProductDetailScreen: React.FC<Props> = ({route, navigation}) => {
     setCurrentImageIndex(0);
     setShowSizeAlert(false);
     setAddedToCart(false);
+  }, [product.id]);
+
+  // Load Judge.me reviews summary and a few reviews
+  useEffect(() => {
+    const loadReviews = async () => {
+      const res = await fetchProductReviews({productGid: product.id, perPage: 5});
+      const summary = computeRatingSummary(res);
+      setReviewsAvg(summary.average);
+      setReviewsCount(summary.count);
+      if (res && res.length > 0) {
+        setTopReviews(
+          res.slice(0, 3).map(r => ({
+            id: r.id,
+            rating: r.rating,
+            title: r.title,
+            body: r.body,
+            reviewerName: r.reviewer?.name ?? null,
+            createdAt: r.created_at,
+          })),
+        );
+      } else {
+        setTopReviews([]);
+      }
+    };
+    loadReviews();
   }, [product.id]);
 
   // Load related products from Shopify
@@ -236,6 +268,11 @@ export const ProductDetailScreen: React.FC<Props> = ({route, navigation}) => {
           <Text style={styles.productName}>{product.name}</Text>
           <Text style={styles.productSubtitle}>100% COTTON SHIRT</Text>
 
+          {/* Ratings Summary */}
+          <View style={styles.ratingRow}>
+            <StarRating rating={reviewsAvg} count={reviewsCount} size={16} />
+          </View>
+
           {/* Price */}
           <Text style={styles.price}>Rs. {product.price.toFixed(2)}</Text>
 
@@ -318,6 +355,27 @@ export const ProductDetailScreen: React.FC<Props> = ({route, navigation}) => {
                 • All Metros, State capitals and most cities
               </Text>
             </Accordion>
+          </View>
+
+          {/* Customer Reviews */}
+          <View style={styles.reviewsSection}>
+            <Text style={styles.reviewsTitle}>Customer Reviews</Text>
+            {topReviews.length === 0 ? (
+              <Text style={styles.reviewsEmpty}>No reviews yet</Text>
+            ) : (
+              topReviews.map(r => (
+                <View key={r.id} style={styles.reviewItem}>
+                  <View style={styles.reviewHeader}>
+                    <StarRating rating={r.rating} size={14} />
+                    <Text style={styles.reviewAuthor}>
+                      {r.reviewerName ? `by ${r.reviewerName}` : ''}
+                    </Text>
+                  </View>
+                  {r.title ? <Text style={styles.reviewTitle}>{r.title}</Text> : null}
+                  {r.body ? <Text style={styles.reviewBody}>{r.body}</Text> : null}
+                </View>
+              ))
+            )}
           </View>
 
           {/* Brand Values */}
@@ -468,6 +526,9 @@ const styles = StyleSheet.create({
     color: '#666',
     marginBottom: 12,
   },
+  ratingRow: {
+    marginBottom: 12,
+  },
   price: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -602,6 +663,48 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#000',
     textAlign: 'center',
+  },
+  // Reviews
+  reviewsSection: {
+    paddingVertical: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#e0e0e0',
+  },
+  reviewsTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#000',
+    marginBottom: 10,
+  },
+  reviewsEmpty: {
+    fontSize: 13,
+    color: '#666',
+  },
+  reviewItem: {
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+  },
+  reviewHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 4,
+  },
+  reviewAuthor: {
+    fontSize: 12,
+    color: '#666',
+  },
+  reviewTitle: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#000',
+    marginBottom: 4,
+  },
+  reviewBody: {
+    fontSize: 13,
+    color: '#444',
+    lineHeight: 20,
   },
   // Related Products Section
   relatedSection: {
