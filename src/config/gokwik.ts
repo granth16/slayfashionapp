@@ -1,9 +1,19 @@
 // GoKwik / KwikPass Configuration
+//
+// Credentials are read from the environment (see `.env.example`) and must NOT be
+// hardcoded or committed to source control. `appSecret` is the authenticating
+// `x-api-key` for api.gokwik.co; treat it as a secret and prefer keeping it
+// server-side rather than shipping it in the client bundle.
+
+// Read from the runtime environment without assuming a typed `process` global,
+// so this works whether or not @types/node / a dotenv transform is present.
+const ENV: Record<string, string | undefined> =
+  (globalThis as any)?.process?.env ?? {};
 
 export const GOKWIK_CONFIG = {
   merchantId: '5perimfdj5x2t',
-  appId: 'app_id_72c711a281394052b5635dbae0512094',
-  appSecret: 'app_secret_5f1722d7a68b4f9cb32ece1018e40796',
+  appId: ENV.GOKWIK_APP_ID ?? '',
+  appSecret: ENV.GOKWIK_APP_SECRET ?? '',
   environment: 'production',
 };
 
