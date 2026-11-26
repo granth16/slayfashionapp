@@ -48,13 +48,19 @@ bundle exec pod install
 
 ### Step 2: Configure Your Brand
 
-Create a `.env` file in the root of the project and add your Shopify store details:
+Copy `.env.example` to `.env` in the root of the project and add your store and GoKwik details:
 
 ```env
 SHOPIFY_STORE_DOMAIN=your-brand.myshopify.com
 SHOPIFY_STOREFRONT_TOKEN=your_storefront_api_token
 BRAND_NAME=Your Brand Name
+
+# GoKwik / KwikPass credentials (keep secret — never commit real values)
+GOKWIK_APP_ID=your_gokwik_app_id
+GOKWIK_APP_SECRET=your_gokwik_app_secret
 ```
+
+> ⚠️ `GOKWIK_APP_SECRET` is the `x-api-key` for api.gokwik.co. Keep it out of source control; prefer proxying KwikPass calls through your own backend so the secret never ships in the app bundle.
 
 > 💡 The app will use these details to fetch your catalog and personalize the entire experience automatically.
 
